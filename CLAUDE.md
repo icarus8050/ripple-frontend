@@ -140,6 +140,34 @@ const roomId: string = ...
 3. UI 변경이면 `npm run dev`로 브라우저에서 실제 동작 확인 (golden path + edge case)
 4. 커밋 메시지는 "왜"를 1-2문장으로
 
+## 자가 리뷰 루프
+
+"일단 동작" 상태에서 멈추지 말고 **self-review → refactor** 루프를 돌린 뒤 완료 보고한다. 상세 체크리스트와 실행 절차는 [`.claude/skills/self-review/SKILL.md`](./.claude/skills/self-review/SKILL.md).
+
+### 5-phase 요약
+| Phase | 내용 |
+|---|---|
+| **0. Plan** | 성공 기준 한 문장 + 건드리지 않을 경계 선언 |
+| **1. Draft** | 동작부터. 네이밍/구조는 거칠어도 OK |
+| **2. Self-review** | 9개 카테고리 체크리스트 — Correctness / Naming / Structure / Types / Duplication / Boundaries / Side effects / React-specific / Readability |
+| **3. Refactor** | **현재 범위 안**의 발견만. 범위 밖은 별도 커밋/이슈로 기록 |
+| **4. Verify** | lint + typecheck + (UI면) 브라우저 확인 |
+
+**Loop:** Phase 3에서 새 smell 발견 시 Phase 2로 복귀. **3회 이상 루프**가 돌면 상위 설계를 재검토.
+
+### 적용 기준
+- **적용**: 중-대규모 기능 구현 직후, PR 직전, 사용자가 "리뷰해줘" 요청
+- **skip**: 한 줄 수정, 오탈자, hotfix, "빠르게" 명시
+
+### 지속 강화 (self-augmenting)
+리뷰 중에 **2회 이상 반복**된 패턴(smell 또는 관행)은 `.claude/skills/self-review/SKILL.md` 하단 **Augmentation Log**에 날짜와 함께 추가한다. 이 저장소에서 **누적되는 학습 자산**.
+
+- 기록 금지: 일회성 버그, 사소한 네이밍 수정
+- 기록 대상: 반복 패턴, 프로젝트 특유의 pitfall
+- 체크리스트가 35개 초과 시 정리(덜 쓰이는 항목 삭제)
+- 스킬 수정은 **별도 커밋**: `chore(skill): self-review — <요약>`
+- 프로젝트 특유 아니라 일반 원칙이면 CLAUDE.md로 승격 검토
+
 ## 커밋 규칙
 
 ### 형식
