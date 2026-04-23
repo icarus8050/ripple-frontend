@@ -2,6 +2,13 @@
 
 실시간 채팅 서비스 프론트엔드. 이 문서는 Claude Code가 이 저장소에서 작업할 때 참고하는 가이드라인이다.
 
+> **이 가이드가 단일 진실 소스다.** 새로 배운 규칙·교훈·반복 패턴·결정은 Claude 개인 메모리(`~/.claude/.../memory/`)가 아니라 다음 세 위치 중 하나에 기록한다:
+> - **규칙·관행**: 이 `CLAUDE.md`
+> - **재사용 절차**: `.claude/skills/<name>/SKILL.md` (+ 필요 시 Augmentation Log)
+> - **되돌리기 비싼 결정**: `docs/decisions/NNNN-*.md` (ADR)
+>
+> 이유: 개인 메모리는 팀·CI·다른 머신과 공유되지 않고, 사용자가 세션을 정리하면 참조 맥락이 끊긴다. 버전 관리되는 파일에 남겨야 지속성이 보장된다.
+
 ## Stack
 - **React 19** (function components + hooks 전용, class 컴포넌트 금지)
 - **TypeScript** (strict mode)
@@ -139,6 +146,39 @@ const roomId: string = ...
 2. `npx tsc -b --noEmit` — 타입 에러 0건
 3. UI 변경이면 `npm run dev`로 브라우저에서 실제 동작 확인 (golden path + edge case)
 4. 커밋 메시지는 "왜"를 1-2문장으로
+
+## 의존성·도구 체인
+
+### Node 버전
+- 고정 버전: **24.15.0** (`.nvmrc` + `package.json` `engines.node: ^24.15.0`).
+- 새 클론 후: `nvm use` → `npm install` → `npm run dev`.
+- CI 환경도 `.nvmrc`를 읽도록 설정 (Node setup 액션의 `node-version-file: '.nvmrc'`).
+
+### 버전 변경 전 반드시 레지스트리 확인
+`package.json`의 버전 범위를 바꾸거나 새 floor를 제안하기 전에 **실제 존재하는 버전**을 확인한다:
+
+```bash
+npm view <package> versions --json | tail -20
+```
+
+이유: 공급자별 릴리스 주기가 다르다. 특히 주의해야 할 불일치 패턴:
+
+| 패턴 | 예시 |
+|---|---|
+| `@types/*`는 런타임 minor를 전부 따라가지 않는다 | `@types/node`는 24.12.2 이후 25.0.0으로 바로 점프 — 24.15.x 없음 |
+| React와 `@types/react`는 비동기 릴리스 | React 19.2.5와 `@types/react` 19.2.14처럼 patch 번호 다름 |
+| Vite 메이저와 플러그인 호환 | `@vitejs/plugin-react`는 Vite major마다 호환 범위 주의 |
+
+### 변경 제안 원칙
+1. **"존재할 것 같다"로 제안하지 않는다** — 확인 안 했으면 "추측임"을 사용자에게 명시.
+2. **런타임과 타입 패키지를 기계적으로 맞추지 않는다** — `@types/*`는 "같은 major 안의 최신"이면 충분.
+3. **floor를 올리는 이유가 있을 때만** 올린다. "새 버전이 나왔으니까"는 이유가 아니다 — 구체적으로 필요한 API, 버그 픽스, 보안 패치를 언급.
+4. **설치 실패 시** 즉시 원인 보고 + 복구 제안. 우회하려 `--force`/`--legacy-peer-deps` 등을 먼저 시도하지 않는다.
+
+### 의존성 커밋 규칙
+- `package.json` + `package-lock.json`은 **같은 커밋**에 묶는다 (한 쪽만 변경되면 재현 불가).
+- 의존성 변경과 해당 라이브러리를 실제로 쓰는 코드는 **별도 커밋** (§ 커밋 단위 규칙 #4).
+- 커밋 타입: 런타임 의존성이면 `build:` 또는 `chore(deps):`, devDependency면 `chore(deps):`.
 
 ## 자가 리뷰 루프
 
