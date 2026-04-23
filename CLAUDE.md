@@ -9,6 +9,24 @@
 >
 > 이유: 개인 메모리는 팀·CI·다른 머신과 공유되지 않고, 사용자가 세션을 정리하면 참조 맥락이 끊긴다. 버전 관리되는 파일에 남겨야 지속성이 보장된다.
 
+## 문서 맵
+
+Claude는 **이 CLAUDE.md만 상시 로드**된다. 작업 유형별로 아래 문서를 **필요할 때 직접 읽어서** 참조한다:
+
+| 상황 | 참조 문서 |
+|---|---|
+| 커밋 메시지 작성, PR 준비, 커밋 단위 판단 | [`docs/guide/commits.md`](./docs/guide/commits.md) |
+| 코드에 주석을 달거나 기존 주석 정리 | [`docs/guide/comments.md`](./docs/guide/comments.md) |
+| `package.json`/버전 변경, npm 이슈 진단 | [`docs/guide/dependencies.md`](./docs/guide/dependencies.md) |
+| 구현 완료 → 자가 리뷰 + 리팩터 루프 | [`.claude/skills/self-review/SKILL.md`](./.claude/skills/self-review/SKILL.md) |
+| 채팅 UI 컴포넌트 생성·수정 | [`.claude/skills/chat-component/SKILL.md`](./.claude/skills/chat-component/SKILL.md) |
+| WebSocket/소켓 레이어 작업 | [`.claude/skills/socket-handler/SKILL.md`](./.claude/skills/socket-handler/SKILL.md) |
+| 머지·배포 가능 상태 점검 | [`.claude/skills/ship-check/SKILL.md`](./.claude/skills/ship-check/SKILL.md) |
+| 되돌리기 비싼 아키텍처 결정 | [`docs/decisions/README.md`](./docs/decisions/README.md) + `NNNN-*.md` |
+| Claude Code 훅 동작·차단 규칙 | `.claude/settings.json`, `.claude/hooks/*.sh` |
+
+문서를 바꿨는데 이 맵이 반영 안 되면 **이 표가 틀린 것**이다 — 맵을 먼저 고친다.
+
 ## Stack
 - **React 19** (function components + hooks 전용, class 컴포넌트 금지)
 - **TypeScript** (strict mode)
