@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Claude Code: user-local overrides (never commit)
+.claude/settings.local.json
