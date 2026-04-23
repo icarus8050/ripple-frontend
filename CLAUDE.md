@@ -65,9 +65,78 @@ src/
 3. UI 변경이면 `npm run dev`로 브라우저에서 실제 동작 확인 (golden path + edge case)
 4. 커밋 메시지는 "왜"를 1-2문장으로
 
+## 커밋 규칙
+
+### 형식
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+- **type** (필수): `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `build`, `ci`, `revert`
+- **scope** (선택): 변경 영역 — `chat`, `socket`, `auth`, `ui`, `hooks`, `lib`, `deps` 등 도메인/모듈 이름
+- **subject**: 50자 이내, 마침표 없이, 한글은 "~추가/수정/제거" 명령형 어미 / 영어는 현재형 동사
+- **body** (선택이지만 권장): 72자 기준 wrap, "무엇"이 아니라 **"왜"** 를 설명
+- **footer** (선택): `BREAKING CHANGE:`, `Closes #123`, `Refs #45`, `Co-Authored-By:`
+
+### 예시
+```
+feat(chat): 메시지 낙관적 전송 구현
+
+서버 ack 지연 시에도 입력 즉시 UI에 반영해 체감 속도를 개선.
+10초 내 ack 없으면 status=failed로 전환하고 재시도 버튼 노출.
+
+Refs #42
+```
+```
+fix(socket): 재연결 시 중복 subscribe 제거
+
+useSocket 언마운트 후 재마운트 경로에서 같은 listener가 두 번
+붙어 메시지가 중복 렌더링되던 문제.
+
+Closes #58
+```
+```
+chore(deps): react 19.2.5 → 19.3.0 업데이트
+```
+
+### 타입 선택 가이드
+| 상황 | type |
+|---|---|
+| 완전히 새 기능/API | `feat` |
+| 버그 수정 | `fix` |
+| 문서/주석만 | `docs` |
+| 공백·세미콜론·포매팅 (동작 변경 없음) | `style` |
+| 동작 유지하면서 구조 개선 | `refactor` |
+| 눈에 띄는 성능 개선 | `perf` |
+| 테스트 추가/수정 | `test` |
+| 빌드/번들/의존성 | `build` 또는 `chore(deps)` |
+| CI 설정 | `ci` |
+| 이전 커밋 되돌리기 | `revert` |
+| 그 외 자잘한 잡무 | `chore` |
+
+### 원칙
+1. **한 커밋 = 한 가지 논리 변경**. 포매팅 + 기능 추가를 섞지 않는다.
+2. **빌드/린트/타입체크 통과 상태에서만 커밋**. 작업 중간 스냅샷은 로컬에서만.
+3. **`main`에 직접 커밋 지양** — 기능 작업은 `feat/<slug>`, 수정은 `fix/<slug>` 브랜치.
+4. **force-push 금지** (로컬 브랜치 정리 제외). `main`에는 절대 금지.
+5. **`--amend`는 아직 push 하지 않은 최신 커밋에만**. push된 커밋은 새 커밋으로 수정.
+6. **`--no-verify` 금지** — 훅이 실패하면 원인을 고친다.
+7. **Claude가 작성한 커밋은 footer에 Co-Authored-By 포함**:
+   ```
+   Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
+   ```
+8. **Breaking change는 footer에 명시**: `BREAKING CHANGE: Message 타입의 id 필드가 string에서 number로 변경됨.`
+9. **이슈/PR 참조는 footer에**: `Closes #123` (자동 close), `Refs #45` (참조만).
+10. **시크릿 금지** — `block-secrets` 훅이 자동 감지하지만 최종 책임은 작성자.
+
 ## PR
-- 제목은 70자 이내, 한글/영어 모두 허용
+- 제목은 70자 이내, 한글/영어 모두 허용. 커밋 type 접두사를 제목에 쓸지는 선택(`feat(chat): …` 형태 권장)
 - 본문에 `## Summary`(1-3개 불릿) + `## Test plan`(체크박스)
+- 단일 커밋이면 커밋 메시지를 그대로 본문에 사용, 여러 커밋이면 요약 새로 작성
 - `main`에 force-push 금지
 
 ## 참고
