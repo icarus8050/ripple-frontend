@@ -279,18 +279,17 @@ chore(deps): react 19.2.5 → 19.3.0 업데이트
 - **`git commit --fixup=<sha>` + `git rebase -i --autosquash`** — 이전 커밋에 합쳐야 할 조각을 깔끔히 묶기 (push 전에만).
 
 ### 일반 원칙
-1. **빌드/린트/타입체크 통과 상태에서만 커밋**. 작업 중간 스냅샷은 로컬에서만 (또는 `wip/` 브랜치).
-2. **`main`에 직접 커밋 지양** — 기능 작업은 `feat/<slug>`, 수정은 `fix/<slug>` 브랜치.
-3. **force-push 금지** (로컬 브랜치 정리 제외). `main`에는 절대 금지.
-4. **`--amend`는 아직 push 하지 않은 최신 커밋에만**. push된 커밋은 새 커밋으로 수정.
-5. **`--no-verify` 금지** — 훅이 실패하면 원인을 고친다.
-6. **Claude가 작성한 커밋은 footer에 Co-Authored-By 포함**:
-   ```
-   Co-Authored-By: Claude Opus 4.7 (1M context) <noreply@anthropic.com>
-   ```
-7. **Breaking change는 footer에 명시**: `BREAKING CHANGE: Message 타입의 id 필드가 string에서 number로 변경됨.`
-8. **이슈/PR 참조는 footer에**: `Closes #123` (자동 close), `Refs #45` (참조만).
-9. **시크릿 금지** — `block-secrets` 훅이 자동 감지하지만 최종 책임은 작성자.
+1. **커밋·푸시는 반드시 사용자 승인 후 실행**.
+   Claude는 `git commit`, `git push`, `git merge`, `git rebase`, 태그 생성 등 **공유 히스토리에 영향을 주는 명령을 단독으로 실행하지 않는다**. 변경 내용과 제안 커밋 메시지를 먼저 보여주고, 사용자의 **명시적 지시**("커밋해", "push해" 등)가 있을 때만 실행. 이전 승인은 그 당시 범위에만 유효하며, 매 커밋마다 새로 확인한다.
+2. **Co-Authored-By trailer 사용 금지**. Claude가 작성한 커밋이라도 footer에 `Co-Authored-By: Claude …`를 넣지 않는다. 히스토리는 실제 커밋터만 표기.
+3. **빌드/린트/타입체크 통과 상태에서만 커밋**. 작업 중간 스냅샷은 로컬에서만 (또는 `wip/` 브랜치).
+4. **`main`에 직접 커밋 지양** — 기능 작업은 `feat/<slug>`, 수정은 `fix/<slug>` 브랜치.
+5. **force-push 금지** (로컬 브랜치 정리 제외). `main`에는 절대 금지.
+6. **`--amend`는 아직 push 하지 않은 최신 커밋에만**. push된 커밋은 새 커밋으로 수정.
+7. **`--no-verify` 금지** — 훅이 실패하면 원인을 고친다.
+8. **Breaking change는 footer에 명시**: `BREAKING CHANGE: Message 타입의 id 필드가 string에서 number로 변경됨.`
+9. **이슈/PR 참조는 footer에**: `Closes #123` (자동 close), `Refs #45` (참조만).
+10. **시크릿 금지** — `block-secrets` 훅이 자동 감지하지만 최종 책임은 작성자.
 
 ## 결정 로그 (Decision Log)
 
