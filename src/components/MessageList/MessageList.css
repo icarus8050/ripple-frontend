@@ -1,0 +1,15 @@
+.message-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--chat-bg);
+}
+
+.message-list__empty {
+  margin: auto;
+  color: var(--chat-text-muted);
+  font-size: 14px;
+}

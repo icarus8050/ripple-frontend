@@ -1,0 +1,29 @@
+.user-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 600;
+  font-family: var(--chat-sans);
+  user-select: none;
+}
+
+.user-avatar--sm {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.user-avatar--md {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+}
+
+.user-avatar--lg {
+  width: 44px;
+  height: 44px;
+  font-size: 16px;
+}
